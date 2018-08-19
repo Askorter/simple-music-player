@@ -10,29 +10,47 @@
 </head>
 
 <body>
+    <div class="top-nav">
+
+        <div id="controls-col">
+            <a id="controls"></a>
+            <div class="controls">
+                <div id="progress" ondragenter="dragenter()" ondragover="dragover()">
+                    <div id="strip">
+                        <span id="widget"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="volume">
+                <div id="volume-bar">
+                    <span id="volume-widget"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <p id="video-name"></p>
+    <div id="video-info">
+        <div id="duration">
+            <span id="duration-now"></span>/
+            <span id="duration-all"></span>
+        </div>
+        <div id="volume-col">
+            <span>音量：</span>
+            <span id="volume"></span>
+        </div>
+    </div>
+    <div>
+        <div id="video-list"></div>
+        <div class="song-lyric"></div>
+    </div>
+
+
     <audio id="player" src="./src/mp3/Spontania,AZU - 同じ空みつめてるあなたに.mp3" preload="auto">
     你的浏览器不支持audio元素
     </audio>
-    <div id="video-list"></div>
-    <p id="video-name"></p>
-    <div id="video-info">
-        <div id="duration"><span id="duration-now"></span>/<span id="duration-all"></span></div>
-        <div id="volume-col"><span>音量：</span><span id="volume"></span></div>
-    </div>
-    <div id="controls-col">
 
-        <div id="progress">
-            <div id="strip">
-                <span id="widget"></span>
-            </div>
-        </div>
-        <div>
-            <div id="volume-bar">
-                <span id="volume-widget"></span>
-            </div>
-        </div>
-        <a id="controls"></a>
-    </div>
 
     <!-- <input id="progress-bar">
     <button id="progress-button">跳转</button>

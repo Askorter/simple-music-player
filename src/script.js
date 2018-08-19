@@ -16,6 +16,9 @@ var progressBar = document.getElementById('strip')
 var progressWidget = document.getElementById('widget')
 var volumeBar = document.getElementById('volume-bar')
 var volumeWidget = document.getElementById('volume-widget')
+var controls = document.querySelector('.controls');
+var volumes = document.querySelector('.volumes');
+let lyric = document.querySelector('.song-lyric');
 var startTime = new Date
 var curTime = 0
 var videoList = ["Rixton - Me and My Broken Heart", "Shawn", "Spontania,AZU - 同じ空みつめてるあなたに", "Steerner,Martell - Crystals", "The Script,will.i.am - Hall of Fame", "The Wanted - Glad You Came", "TheFatRat - Unity", "Thomas Bergersen - Immortal", "Timmy Trumpet - Nightmare (Original Mix)"]
@@ -36,6 +39,8 @@ function showVideoList() {
         a.addEventListener('click', function() {
             player.src = './src/mp3/' + videoList[i] + '.mp3'
             player.load()
+            player.play();
+
         })
         list.appendChild(a)
     }
@@ -168,6 +173,22 @@ document.addEventListener('mouseup', function() {
     document.removeEventListener('mousemove', changeWidget)
     document.removeEventListener('mousemove', changeVolume)
 })
+controls.addEventListener("mouseleave", function() {
+        if (playerStatus == false && mousemove == true && beforemove == true) {
+            player.play()
+            mousemove = false
+        }
+        document.removeEventListener('mousemove', changeWidget)
+        document.removeEventListener('mousemove', changeVolume)
+    })
+    // volumes.addEventListener("mouseleave", function() {
+    //     if (playerStatus == false && mousemove == true && beforemove == true) {
+    //         player.play()
+    //         mousemove = false
+    //     }
+    //     document.removeEventListener('mousemove', changeWidget)
+    //     document.removeEventListener('mousemove', changeVolume)
+    // })
 player.addEventListener('durationchange', function() {
     durationNow.innerHTML = '0:00'
     durationAll.innerHTML = parseInt(player.duration / 60) + ':' + (player.duration % 60 > 10 ? parseInt(player.duration % 60) : '0' + parseInt(player.duration % 60))
@@ -205,3 +226,24 @@ button.addEventListener('click', control)
     // pbutton.addEventListener('click', jump)
     /* volumeUp.addEventListener('click', volumeU)
     volumeDown.addEventListener('click', volumeD) */
+
+function dragenter() {
+    let e = event || window.event
+    e.preventDefault();
+
+}
+
+function dragover() {
+    let e = event || window.event
+    e.preventDefault();
+}
+
+list.addEventListener('click', function() {
+    lyric.style.display = "block";
+    list.style.display = "none";
+})
+
+lyric.addEventListener('click', function() {
+    list.style.display = "block";
+    lyric.style.display = "none";
+})
