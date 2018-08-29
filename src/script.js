@@ -19,9 +19,11 @@ var volumeWidget = document.getElementById("volume-widget");
 var controls = document.querySelector(".controls-bar");
 var volumes = document.querySelector(".volumes");
 let lyric = document.querySelector(".song-lyric");
+let lyricButton = document.querySelector(".lyric-button");
 var startTime = new Date();
 var curTime = 0;
 var playingIndex = 0;
+let lyricShow = false;
 
 function getName(index) {
   var name = document.querySelectorAll(".song-name")[index].innerHTML;
@@ -294,10 +296,10 @@ function dragover() {
 //   list.style.display = "none";
 // });
 
-lyric.addEventListener("click", function() {
-  list.style.display = "block";
-  lyric.style.display = "none";
-});
+// lyric.addEventListener("click", function() {
+//   list.style.display = "block";
+//   lyric.style.display = "none";
+// });
 
 function handlerSongData(data) {
   let songList = [];
@@ -340,5 +342,26 @@ function fetchData(url, success) {
 function showLyric() {
   let lyric = document.querySelector(".song-lyric");
   let list = document.querySelector(".video-list");
+  let id = document.querySelectorAll(".so");
   let url = `https://api.imjad.cn/cloudmusic?type=lyric&id=${id}`;
 }
+
+lyricButton.addEventListener("click", function() {
+  if (lyricShow == false) {
+    list.classList.remove("turn-over-front-one");
+    lyric.classList.remove("turn-over-front-two");
+    list.classList.add("turn-over-back-one");
+    lyric.classList.add("turn-over-back-two");
+    list.style.pointerEvents = "none";
+    lyric.style.pointerEvents = "auto";
+    lyricShow = true;
+  } else {
+    list.classList.remove("turn-over-back-one");
+    lyric.classList.remove("turn-over-back-two");
+    list.classList.add("turn-over-front-one");
+    lyric.classList.add("turn-over-front-two");
+    list.style.pointerEvents = "auto";
+    lyric.style.pointerEvents = "none";
+    lyricShow = false;
+  }
+});
