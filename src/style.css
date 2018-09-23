@@ -72,6 +72,7 @@ html {
     display: flex;
     justify-content: center;
     color: #333;
+    visibility: hidden;
 }
 
 #controls-col {
@@ -83,7 +84,7 @@ html {
 }
 
 #progress {
-    margin: 0 20px;
+    margin-left: 10px;
 }
 
 #controls {
@@ -94,6 +95,31 @@ html {
     width: 40px;
     height: 40px;
     cursor: pointer;
+    flex-shrink: 0;
+}
+
+.pre-song {
+    margin-right: 10px;
+    background-image: url("./img/pre.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.next-song {
+    margin-left: 10px;
+    background-image: url("./img/next.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .controls-bar {
@@ -219,7 +245,7 @@ html {
 .lyric-button {
     width: 30px;
     height: 30px;
-    margin-left: 20px;
+    margin-left: 10px;
     display: inline-block;
     background-image: url(./img/lyric.png);
     background-size: cover;
@@ -278,4 +304,58 @@ html {
     background-color: #fff;
     cursor: pointer;
     user-select: none;
+}
+
+.skeleton {
+    width: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.skeleton-item {
+    height: 60px;
+    margin: 5px auto;
+    padding: 5px;
+    text-align: center;
+    background-color: #656565;
+    color: #fff;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.item-album {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    background-color: #f6f6f6;
+    background-size: cover;
+    background-position: center;
+}
+
+.item-info {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+.item-name {
+    width: 300px;
+    height: 20px;
+    margin-bottom: 10px;
+    display: inline-block;
+    overflow: hidden;
+    background-color: #f6f6f6;
+}
+
+.item-author {
+    width: 200px;
+    height: 20px;
+    display: inline-block;
+    overflow: hidden;
+    background-color: #f6f6f6;
 }

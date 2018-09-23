@@ -71,6 +71,7 @@ function showVideoList(videoList, begin, end) {
             fetchData(
                 `https://api.imjad.cn/cloudmusic?type=song&id=${videoList[i].id}`,
                 function(data) {
+                    document.querySelector('#video-info').style.visibility = 'visible';
                     player.src = data.data[0].url;
                     player.load();
                     player.play();
@@ -183,6 +184,38 @@ function changeVolume() {
     player.volume = volume / 50 > 0 ? volume / 50 : 0;
 }
 
+function preSong() {
+    if (playingIndex == 0) {
+        return;
+    } else {
+        fetchData(
+            `https://api.imjad.cn/cloudmusic?type=song&id=${songList[playingIndex-1].id}`,
+            function(data) {
+                player.src = data.data[0].url;
+                player.load();
+                player.play();
+                playingIndex--;
+            }
+        );
+    }
+}
+
+function nextSong() {
+    if (playingIndex == end - 1) {
+        return;
+    } else {
+        fetchData(
+            `https://api.imjad.cn/cloudmusic?type=song&id=${songList[playingIndex + 1].id}`,
+            function(data) {
+                player.src = data.data[0].url;
+                player.load();
+                player.play();
+                playingIndex++;
+            }
+        );
+    }
+}
+
 window.onload = function() {
     fetchData(
         `https://api.imjad.cn/cloudmusic?type=playlist&id=105817338`,
@@ -225,6 +258,11 @@ controls.addEventListener("mouseleave", function() {
     document.removeEventListener("mousemove", changeWidget);
     document.removeEventListener("mousemove", changeVolume);
 });
+
+let pre = document.querySelector('.pre-song');
+let next = document.querySelector('.next-song');
+pre.addEventListener('click', preSong);
+next.addEventListener('click', nextSong);
 // volumes.addEventListener("mouseleave", function() {
 //     if (playerStatus == false && mousemove == true && beforemove == true) {
 //         player.play()
@@ -324,6 +362,7 @@ function handlerSongData(data) {
         songList[index].id = value.id;
     });
     showVideoList(songList, 0, 10);
+    document.querySelector('.skeleton').style.display = 'none';
     end = 10;
 }
 
