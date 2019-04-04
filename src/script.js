@@ -35,6 +35,26 @@ function getName(index) {
     videoName.innerHTML = decodeURIComponent(name);
 }
 
+function getSongDetail(videoList, begin, end) {
+    let count = 0;
+    for (let i = begin; i < end; i++) {
+        fetchData(`https://api.imjad.cn/cloudmusic/?type=detail&id=${videoList[i].id}`, (data) => {
+            songList[i] = {
+                songName: data.songs[0].name,
+                albumName: data.songs[0].al.name,
+                picUrl: data.songs[0].al.picUrl,
+                author: data.songs[0].ar[0].name,
+                id: data.songs[0].id
+            };
+            count++;
+            if (count == 10) {
+                showVideoList(videoList, begin, end);
+                document.querySelector('.skeleton').style.display = 'none';
+            }
+        })
+    }
+}
+
 function showVideoList(videoList, begin, end) {
     for (let i = begin; i < end; i++) {
         let a = document.createElement("div");
@@ -69,7 +89,7 @@ function showVideoList(videoList, begin, end) {
     for (let i = begin; i < end; i++) {
         a[i].addEventListener("click", () => {
             fetchData(
-                `https://api.imjad.cn/cloudmusic?type=song&id=${videoList[i].id}`,
+                `https://api.imjad.cn/cloudmusic/?type=song&id=${videoList[i].id}`,
                 function(data) {
                     document.querySelector('#video-info').style.visibility = 'visible';
                     player.src = data.data[0].url;
@@ -189,7 +209,7 @@ function preSong() {
         return;
     } else {
         fetchData(
-            `https://api.imjad.cn/cloudmusic?type=song&id=${songList[playingIndex-1].id}`,
+            `https://api.imjad.cn/cloudmusic/?type=song&id=${songList[playingIndex-1].id}`,
             function(data) {
                 player.src = data.data[0].url;
                 player.load();
@@ -205,7 +225,7 @@ function nextSong() {
         return;
     } else {
         fetchData(
-            `https://api.imjad.cn/cloudmusic?type=song&id=${songList[playingIndex + 1].id}`,
+            `https://api.imjad.cn/cloudmusic/?type=song&id=${songList[playingIndex + 1].id}`,
             function(data) {
                 player.src = data.data[0].url;
                 player.load();
@@ -218,7 +238,7 @@ function nextSong() {
 
 window.onload = function() {
     fetchData(
-        `https://api.imjad.cn/cloudmusic?type=playlist&id=105817338`,
+        `https://api.imjad.cn/cloudmusic/?type=playlist&id=105817338`,
         handlerSongData
     );
 };
@@ -350,19 +370,13 @@ function dragover() {
 // });
 
 function handlerSongData(data) {
-    data.playlist.tracks.forEach((value, index, arr) => {
+    data.playlist.trackIds.forEach((value, index, arr) => {
         songList.push({
-            songName: value.name,
-            albumName: value.al.name,
-            picUrl: value.al.picUrl,
-            author: value.ar[0].name
+            id: value.id
         });
     });
-    data.playlist.trackIds.forEach((value, index) => {
-        songList[index].id = value.id;
-    });
-    showVideoList(songList, 0, 10);
-    document.querySelector('.skeleton').style.display = 'none';
+    getSongDetail(songList, 0, 10);
+
     end = 10;
 }
 
@@ -391,30 +405,40 @@ function fetchData(url, success) {
 function showLyric(id) {
     let lyric = document.querySelector(".lyric-container");
     let list = document.querySelector(".video-list");
-    let url = `https://api.imjad.cn/cloudmusic?type=lyric&id=${id}`;
+    let url = `https://api.imjad.cn/cloudmusic/?type=lyric&id=${id}`;
     fetchData(url, (data) => {
-        let songLyric = data.lrc.lyric;
-        songLyric = songLyric.split('\n');
-        timeList = [];
-        songLyric.forEach(item => {
-                if (!item) {
-                    return;
-                }
-                let p = document.createElement('p');
-                //console.log(item)
-                let temp = item.split(']')
-                if (isNaN(temp[0].slice(1).split(':')[0] * 60 + temp[0].slice(1).split(':')[1])) {
-                    return;
-                }
-                p.innerHTML = temp[1];
-                lyric.appendChild(p);
-                timeList.push(temp[0].slice(1));
-            })
-            //console.log(timeList)
-        timeList = timeList.map(item => {
-            let temp = item.split(':');
-            return temp[0] * 60 + temp[1] * 1;
-        });
+        if (data.nolyric && data.nolyric === true) {
+            lyric.innerHTML = "纯音乐，无歌词"
+        } else {
+            let songLyric = data.lrc.lyric;
+            songLyric = songLyric.split('\n');
+            timeList = [];
+            songLyric.forEach(item => {
+                    if (!item) {
+                        return;
+                    }
+                    let p = document.createElement('p');
+                    //console.log(item)
+                    let index = item.indexOf(']');
+                    let lastIndex = item.lastIndexOf(']');
+                    let temp = [];
+                    temp.push(item.slice(0, index));
+                    temp.push(item.slice(lastIndex + 1));
+                    if (isNaN(temp[0].slice(1).split(':')[0] * 60 + temp[0].slice(1).split(':')[1])) {
+                        return;
+                    }
+                    //console.log(temp[0])
+                    p.innerHTML = temp[1];
+                    lyric.appendChild(p);
+                    timeList.push(temp[0].slice(1));
+                })
+                //console.log(timeList)
+            timeList = timeList.map(item => {
+                let temp = item.split(':');
+                return temp[0] * 60 + temp[1] * 1;
+            });
+        }
+
         lyric.style.transform = 'rotateY(-180deg)';
     })
 }
@@ -497,5 +521,5 @@ let moreButton = document.querySelector('.more-button');
 moreButton.addEventListener('click', () => {
     begin = end;
     end = end + 10;
-    showVideoList(songList, begin, end);
+    getSongDetail(songList, begin, end);
 })
